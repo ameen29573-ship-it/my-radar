@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مطعم رادار - RADAR | قائمة الطعام والطلب المباشر</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts - Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        radarYellow: '#FFC800',
+                        radarYellowDark: '#E6B400',
+                        radarRed: '#E50914',
+                        radarRedDark: '#B80710',
+                        radarDark: '#121212',
+                        radarCard: '#1E1E1E',
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #121212;
+            color: #f3f4f6;
+        }
+        .radar-gradient {
+            background: linear-gradient(135deg, #FFC800 0%, #E50914 100%);
+        }
+        .radar-badge {
+            background: linear-gradient(90deg, #E50914 0%, #B80710 100%);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #FFC800;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-radarDark min-h-screen pb-24 flex flex-col">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-radarRed text-white text-xs md:text-sm py-2 px-4 text-center font-bold flex items-center justify-center gap-2 shadow-md">
+        <i class="fa-solid fa-truck-fast animate-pulse">
+        <span>التوصيل حصرياً في بغداد: (الطارمية - الغزالية - المنصور - اليرموك) فقط | رسم التوصيل: 2.000 د.ع</span>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 bg-radarDark/95 backdrop-blur-md border-b border-zinc-800 shadow-xl">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            
+            <!-- Logo & Brand -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <div class="w-12 h-12 rounded-full bg-radarYellow flex items-center justify-center border-2 border-radarRed shadow-lg text-radarDark font-black text-xl">
+                    <i class="fa-solid fa-plane-departure text-radarRed"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-wider text-radarYellow leading-none">
+                        RADAR <span class="text-xs text-radarRed block font-bold mt-1">نكهة عابرة للقارات</span>
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Header Info & Cart Button -->
+            <div class="flex items-center gap-3">
+                <div class="hidden md:flex flex-col text-left text-xs text-zinc-400 border-l border-zinc-800 pl-4 border-r pr-4">
+                    <span class="text-radarYellow font-bold"><i class="fa-regular fa-clock ml-1"></i> 1 ظهراً - 12 ليلاً</span>
+                    <span><i class="fa-solid fa-phone text-radarRed ml-1"></i> الطلبات: 07864933822</span>
+                </div>
+
+                <button id="cartBtn" onclick="toggleCartDrawer()" class="relative bg-radarYellow hover:bg-radarYellowDark text-radarDark font-extrabold px-4 py-2.5 rounded-full flex items-center gap-2 transition-transform transform active:scale-95 shadow-lg">
+                    <i class="fa-solid fa-cart-shopping text-lg"></i>
+                    <span class="hidden sm:inline">السلة</span>
+                    <span id="cartCountBadge" class="bg-radarRed text-white text-xs font-black px-2 py-0.5 rounded-full min-w-[20px] text-center shadow">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Hero Banner -->
+    <section class="relative overflow-hidden bg-gradient-to-b from-zinc-900 to-radarDark border-b border-zinc-800 py-8 px-4">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="text-center md:text-right md:w-2/3 space-y-3">
+                <span class="inline-block bg-radarRed/20 text-radarRed font-bold text-xs px-3 py-1 rounded-full border border-radarRed/30">
+                    <i class="fa-solid fa-fire text-radarYellow ml-1"></i> أصل النكهة والمطعم رقم 1
+                </span>
+                <h2 class="text-3xl md:text-5xl font-black text-white leading-tight">
+                    أشهى وجبات <span class="text-radarYellow">البرغر والسندويشات</span> تصلك ساخنة!
+                </h2>
+                <p class="text-zinc-400 text-sm md:text-base max-w-xl">
+                    تذوق طعم الوجبات الكاملة، الريزو الغني بالصوص، والفرايز المقرمش. اطلب الآن مباشرة ليصلك طلبك لأي مكان في المناطق المشمولة.
+                </p>
+                <div class="flex flex-wrap items-center justify-center md:justify-start gap-2 pt-2 text-xs font-bold text-zinc-300">
+                    <span class="bg-zinc-800 px-3 py-1.5 rounded-lg border border-zinc-700/60"><i class="fa-solid fa-location-dot text-radarYellow ml-1"></i> الطارمية</span>
+                    <span class="bg-zinc-800 px-3 py-1.5 rounded-lg border border-zinc-700/60"><i class="fa-solid fa-location-dot text-radarYellow ml-1"></i> الغزالية</span>
+                    <span class="bg-zinc-800 px-3 py-1.5 rounded-lg border border-zinc-700/60"><i class="fa-solid fa-location-dot text-radarYellow ml-1"></i> المنصور</span>
+                    <span class="bg-zinc-800 px-3 py-1.5 rounded-lg border border-zinc-700/60"><i class="fa-solid fa-location-dot text-radarYellow ml-1"></i> اليرموك</span>
+                </div>
+            </div>
+
+            <!-- Meal Promo Highlight Card -->
+            <div class="w-full md:w-80 bg-zinc-900 border border-radarYellow/40 rounded-2xl p-4 shadow-2xl relative overflow-hidden text-center transform hover:scale-[1.02] transition-all">
+                <div class="absolute -top-10 -right-10 w-24 h-24 bg-radarYellow/10 rounded-full blur-xl"></div>
+                <div class="bg-radarRed text-white text-xs font-black py-1 px-3 rounded-full inline-block mb-2">
+                    عروض وجبات رادار 🔥
+                </div>
+                <h3 class="text-xl font-black text-radarYellow">خليها وجبة كاملة!</h3>
+                <p class="text-xs text-zinc-300 my-2">أضف على أي برغر: <span class="text-white font-bold">(برغر + فرايز + مشروب)</span></p>
+                <div class="text-radarYellow text-2xl font-black">فقط بـ +1,500 <span class="text-xs text-zinc-400">د.ع</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Filters & Search Bar -->
+    <main class="max-w-6xl mx-auto px-4 py-8 flex-1 w-full">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+            
+            <!-- Category Tabs -->
+            <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 custom-scrollbar">
+                <button onclick="filterCategory('all')" class="category-btn active bg-radarYellow text-radarDark font-bold px-4 py-2 rounded-xl whitespace-nowrap transition-all shadow">
+                    <i class="fa-solid fa-utensils ml-1"></i> الكل
+                </button>
+                <button onclick="filterCategory('burgers')" class="category-btn bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-4 py-2 rounded-xl whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-burger ml-1 text-radarYellow"></i> البرغر
+                </button>
+                <button onclick="filterCategory('sandwiches')" class="category-btn bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-4 py-2 rounded-xl whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-bread-slice ml-1 text-radarYellow"></i> السندويشات
+                </button>
+                <button onclick="filterCategory('rizo')" class="category-btn bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-4 py-2 rounded-xl whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-bowl-rice ml-1 text-radarYellow"></i> الريزو
+                </button>
+                <button onclick="filterCategory('fries')" class="category-btn bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-4 py-2 rounded-xl whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-box-tissue ml-1 text-radarYellow"></i> الفرايز
+                </button>
+                <button onclick="filterCategory('extras')" class="category-btn bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-4 py-2 rounded-xl whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-bottle-water ml-1 text-radarYellow"></i> المشروبات والإضافات
+                </button>
+            </div>
+
+            <!-- Search Field -->
+            <div class="relative w-full md:w-72">
+                <input type="text" id="searchInput" oninput="handleSearch()" placeholder="بحث عن وجبة أو صنف..." class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-2.5 pr-10 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-radarYellow transition-colors">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-zinc-500"></i>
+            </div>
+        </div>
+
+        <!-- Menu Items Grid -->
+        <div id="menuGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Items injected by JavaScript -->
+        </div>
+
+        <!-- Empty Search State -->
+        <div id="noResults" class="hidden text-center py-16 text-zinc-500">
+            <i class="fa-solid fa-face-frown text-5xl mb-3 text-zinc-600"></i>
+            <p class="text-lg font-bold">عذراً، لم نجد أي وجبة تطابق بحثك!</p>
+            <button onclick="resetSearch()" class="mt-3 text-radarYellow underline text-sm">عرض كل الوجبات</button>
+        </div>
+    </main>
+
+    <!-- Meal Option Customization Modal -->
+    <div id="optionModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl relative text-right">
+            <button onclick="closeOptionModal()" class="absolute left-4 top-4 text-zinc-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            
+            <div class="text-center">
+                <h3 id="optModalTitle" class="text-2xl font-black text-radarYellow">اسم البرغر</h3>
+                <p id="optModalDesc" class="text-xs text-zinc-400 mt-1">تخصيص الطلب قبل الإضافة للسلة</p>
+            </div>
+
+            <div class="space-y-3 pt-2">
+                <label class="text-sm font-bold text-zinc-300 block">اختر نوع التقديم:</label>
+                
+                <!-- Option 1: Sandwich Only -->
+                <div onclick="selectMealOption(false)" id="optSandwichOnly" class="border-2 border-radarYellow bg-zinc-800/80 p-3.5 rounded-xl flex items-center justify-between cursor-pointer transition-all">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-burger text-radarYellow text-xl"></i>
+                        <div>
+                            <div class="font-bold text-white text-sm">سندويش فقط</div>
+                            <div class="text-xs text-zinc-400">البرغر بمفرده</div>
+                        </div>
+                    </div>
+                    <span id="optBasePrice" class="font-black text-radarYellow">6,500 د.ع</span>
+                </div>
+
+                <!-- Option 2: Full Meal -->
+                <div onclick="selectMealOption(true)" id="optFullMeal" class="border-2 border-zinc-700 bg-zinc-800/30 p-3.5 rounded-xl flex items-center justify-between cursor-pointer transition-all">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-utensils text-radarRed text-xl"></i>
+                        <div>
+                            <div class="font-bold text-white text-sm flex items-center gap-1.5">
+                                وجبة كاملة 
+                                <span class="bg-radarRed text-white text-[10px] px-1.5 py-0.5 rounded font-black">+1,500 د.ع</span>
+                            </div>
+                            <div class="text-xs text-zinc-400">تشمل: برغر + فرايز + مشروب غازي</div>
+                        </div>
+                    </div>
+                    <span id="optMealPrice" class="font-black text-radarYellow">8,000 د.ع</span>
+                </div>
+            </div>
+
+            <!-- Drink choice if meal selected -->
+            <div id="drinkChoiceContainer" class="hidden space-y-2 pt-2 border-t border-zinc-800">
+                <label class="text-xs font-bold text-zinc-300 block">اختر المشروب المجاني مع الوجبة:</label>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <button type="button" onclick="setDrinkChoice('بيبسي')" class="drink-btn border border-radarYellow bg-radarYellow/10 text-radarYellow font-bold p-2 rounded-lg text-center">بيبسي</button>
+                    <button type="button" onclick="setDrinkChoice('كوكاكولا')" class="drink-btn border border-zinc-700 text-zinc-400 font-bold p-2 rounded-lg text-center">كوكاكولا</button>
+                </div>
+            </div>
+
+            <button onclick="confirmAddToCartWithOptions()" class="w-full bg-radarYellow hover:bg-radarYellowDark text-radarDark font-black py-3 rounded-xl transition-all shadow-lg text-base mt-4">
+                إضافة إلى السلة <i class="fa-solid fa-cart-plus mr-1"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Cart Drawer Modal -->
+    <div id="cartDrawer" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex justify-end">
+        <div class="bg-zinc-900 border-r border-zinc-800 w-full max-w-md h-full flex flex-col justify-between p-6 shadow-2xl relative text-right">
+            
+            <!-- Drawer Header -->
+            <div>
+                <div class="flex items-center justify-between border-b border-zinc-800 pb-4 mb-4">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-cart-shopping text-radarYellow text-xl"></i>
+                        <h3 class="text-xl font-black text-white">سلة الطلبات</h3>
+                    </div>
+                    <button onclick="toggleCartDrawer()" class="text-zinc-400 hover:text-white p-2">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Cart Items Scroll List -->
+                <div id="cartItemsList" class="space-y-3 overflow-y-auto max-h-[55vh] custom-scrollbar pl-1">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Drawer Footer / Checkout summary -->
+            <div class="border-t border-zinc-800 pt-4 space-y-3 bg-zinc-900">
+                <div class="space-y-1 text-sm">
+                    <div class="flex justify-between text-zinc-400">
+                        <span>مجموع الوجبات:</span>
+                        <span id="cartSubtotal" class="font-bold text-white">0 د.ع</span>
+                    </div>
+                    <div class="flex justify-between text-zinc-400">
+                        <span>أجور التوصيل (بغداد):</span>
+                        <span class="font-bold text-radarYellow">1,500 د.ع</span>
+                    </div>
+                    <div class="flex justify-between text-lg font-black text-white pt-2 border-t border-zinc-800">
+                        <span>المبلغ الإجمالي:</span>
+                        <span id="cartTotal" class="text-radarYellow">1,500 د.ع</span>
+                    </div>
+                </div>
+
+                <button onclick="openCheckoutModal()" id="checkoutProceedBtn" disabled class="w-full bg-radarYellow hover:bg-radarYellowDark disabled:opacity-50 disabled:cursor-not-allowed text-radarDark font-black py-3.5 rounded-xl transition-all shadow-lg text-base flex items-center justify-center gap-2">
+                    متابعة لتحديد العنوان والإرسال <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative text-right custom-scrollbar max-h-[90vh] overflow-y-auto">
+            <button onclick="closeCheckoutModal()" class="absolute left-4 top-4 text-zinc-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <div class="text-center border-b border-zinc-800 pb-3">
+                <h3 class="text-2xl font-black text-radarYellow"><i class="fa-solid fa-location-dot text-radarRed ml-2"></i>بيانات توصيل الطلب</h3>
+                <p class="text-xs text-zinc-400 mt-1">المناطق المتاحة فقط في بغداد: الطارمية، الغزالية، المنصور، اليرموك</p>
+            </div>
+
+            <form id="orderForm" onsubmit="handleOrderSubmission(event)" class="space-y-4">
+                <!-- Customer Name -->
+                <div>
+                    <label class="block text-xs font-bold text-zinc-300 mb-1">الاسم الكامل <span class="text-radarRed">*</span></label>
+                    <input type="text" id="custName" required placeholder="مثال: علي محمد" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-radarYellow">
+                </div>
+
+                <!-- Customer Phone -->
+                <div>
+                    <label class="block text-xs font-bold text-zinc-300 mb-1">رقم الهاتف <span class="text-radarRed">*</span></label>
+                    <input type="tel" id="custPhone" required pattern="[0-9]{10,11}" placeholder="07XXXXXXXXX" class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-radarYellow dir-ltr text-right">
+                </div>
+
+                <!-- City Fixed to Baghdad -->
+                <div>
+                    <label class="block text-xs font-bold text-zinc-300 mb-1">المحافظة</label>
+                    <input type="text" value="بغداد (حصرية للتوصيل)" readonly class="w-full bg-zinc-800/50 border border-zinc-700/60 rounded-xl px-4 py-2.5 text-sm text-radarYellow font-bold cursor-not-allowed">
+                </div>
+
+                <!-- Allowed Zones ONLY -->
+                <div>
+                    <label class="block text-xs font-bold text-zinc-300 mb-1">المنطقة السكنية (اختر منطقتك) <span class="text-radarRed">*</span></label>
+                    <select id="custZone" required class="w-full bg-zinc-800 border border-radarYellow/80 text-white rounded-xl px-4 py-2.5 text-sm font-bold focus:outline-none focus:border-radarYellow">
+                        <option value="" disabled selected>-- اختر إحدى المناطق المتاحة --</option>
+                        <option value="الطارمية">الطارمية</option>
+                        <option value="الغزالية">الغزالية</option>
+                        <option value="المنصور">المنصور</option>
+                        <option value="اليرموك">اليرموك</option>
+                    </select>
+                    <p class="text-[11px] text-zinc-400 mt-1"><i class="fa-solid fa-circle-info text-radarYellow ml-1"></i> لا يمكن اختيار مناطق أخرى غير المذكورة.</p>
+                </div>
+
+                <!-- Detailed Address -->
+                <div>
+                    <label class="block text-xs font-bold text-zinc-300 mb-1">تفاصيل العنوان / أقرب نقطة دالة <span class="text-radarRed">*</span></label>
+                    <textarea id="custAddress" required rows="2" placeholder="المحلة، الشارع، رقم الدار، أو نقطة دالة مجاورة..." class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-radarYellow"></textarea>
+                </div>
+
+                <!-- Special Notes -->
+                <div>
+                    <label class="block text-xs font-bold text-zinc-300 mb-1">ملاحظات إضافية على الطلب (اختياري)</label>
+                    <input type="text" id="custNotes" placeholder="مثال: بدون كاتشب، الصوص جانبي..." class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-radarYellow">
+                </div>
+
+                <!-- Submit Order Action -->
+                <div class="pt-2">
+                    <button type="submit" class="w-full bg-radarRed hover:bg-radarRedDark text-white font-black py-3.5 rounded-xl transition-all shadow-xl text-base flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> إكمال الطلب وتحضير الرسالة
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Final Message Dispatch Modal -->
+    <div id="dispatchModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-700 rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl text-center relative">
+            
+            <div class="w-16 h-16 bg-radarYellow/10 border-2 border-radarYellow rounded-full flex items-center justify-center mx-auto text-radarYellow text-2xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <div>
+                <h3 class="text-2xl font-black text-white">تم تجهيز طلبك بنجاح!</h3>
+                <p class="text-xs text-zinc-400 mt-1">اضغط على أحد الأزرار أدناه لإرسال الطلب مباشرة إلى مطعم رادار علي الرقم <span class="text-radarYellow font-bold dir-ltr inline-block">07864933822</span></p>
+            </div>
+
+            <!-- Preview Box -->
+            <div class="bg-zinc-800 p-3 rounded-xl border border-zinc-700/80 text-right text-xs text-zinc-300 font-mono space-y-1 max-h-40 overflow-y-auto custom-scrollbar dir-rtl">
+                <div class="font-bold text-radarYellow">معاينة النص المرسل:</div>
+                <div id="messagePreviewText" class="whitespace-pre-wrap text-[11px] leading-relaxed text-zinc-200"></div>
+            </div>
+
+            <!-- Dispatch Buttons -->
+            <div class="space-y-2.5 pt-2">
+                <!-- WhatsApp Option -->
+                <button onclick="sendViaWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg text-sm">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> إرسال عبر واتساب (WhatsApp)
+                </button>
+
+                <!-- SMS Option -->
+                <button onclick="sendViaSMS()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg text-sm">
+                    <i class="fa-solid fa-comment-sms text-lg"></i> إرسال عبر رسالة نصية SMS
+                </button>
+
+                <!-- Copy Text Option -->
+                <button onclick="copyOrderMessage()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all text-xs">
+                    <i class="fa-regular fa-copy"></i> نسخ نص الطلب فقط
+                </button>
+            </div>
+
+            <button onclick="resetAndCloseAll()" class="text-xs text-zinc-500 hover:text-zinc-300 pt-2 block mx-auto underline">
+                العودة للقائمة الرئيسية
+            </button>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-radarYellow text-radarDark font-bold px-5 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2">
+        <i class="fa-solid fa-circle-check text-lg"></i>
+        <span id="toastMsg">تمت الإضافة بنجاح</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-zinc-950 border-t border-zinc-800 py-6 px-4 mt-auto">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+            <div class="flex items-center gap-2">
+                <span class="font-black text-radarYellow text-base">RADAR</span>
+                <span>- نكهة عابرة للقارات | جميع الحقوق محفوظة © 2026</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span><i class="fa-brands fa-instagram text-radarYellow"></i> @radar.top</span>
+                <span><i class="fa-solid fa-phone text-radarRed"></i> 07864933822</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // TARGET RESTAURANT PHONE NUMBER
+        const TARGET_PHONE = "07864933822";
+        const WA_PHONE = "9647864933822"; // International format for WhatsApp
+
+        // Menu Data based on the provided restaurant menu image
+        const menuItems = [
+            // البرغر
+            {
+                id: 'b1',
+                name: 'برغر رادار الأصلي',
+                category: 'burgers',
+                price: 6500,
+                isBurger: true,
+                badge: 'موصى به',
+                desc: 'شريحة لحم طازجة مع الصوص الخاص والخضار الطازجة.',
+                image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'b2',
+                name: 'برغر رادار بالجبين',
+                category: 'burgers',
+                price: 7000,
+                isBurger: true,
+                badge: '',
+                desc: 'شريحة لحم مشوية مغطاة بطبقات من الجبن الذهبي المذاب.',
+                image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'b3',
+                name: 'برغر رادار هني ماسترد',
+                category: 'burgers',
+                price: 7250,
+                isBurger: true,
+                badge: '',
+                desc: 'شريحة برغر مميزة بصوص الخردل والعسل الشهي.',
+                image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'b4',
+                name: 'دبل برغر رادار',
+                category: 'burgers',
+                price: 9500,
+                isBurger: true,
+                badge: 'الأكثر طلباً',
+                desc: 'شريحتان مضاعفتان من اللحم المشوي مع مضاعفة الجبن.',
+                image: 'https://images.unsplash.com/photo-1583794138481-21c3ed138885?auto=format&fit=crop&w=600&q=80'
+            },
+
+            // السندويشات
+            {
+                id: 's1',
+                name: 'تشكن كرسمي بلس',
+                category: 'sandwiches',
+                price: 5500,
+                isBurger: false,
+                badge: 'حجم كبير',
+                desc: 'سندويش الدجاج المقرمش الكريسمي الخرافية.',
+                image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 's2',
+                name: 'هاي تويستر',
+                category: 'sandwiches',
+                price: 4500,
+                isBurger: false,
+                badge: '',
+                desc: 'لفائف الدجاج المتبل والمقرمش بصوص التويستر الحار.',
+                image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=600&q=80'
+            },
+
+            // الريزو
+            {
+                id: 'r1',
+                name: 'ريزو شاورما',
+                category: 'rizo',
+                price: 6500,
+                isBurger: false,
+                badge: '',
+                desc: 'أرز الريزو المتبل مع قطع شاورما اللحم وصوص الثومية المميز.',
+                image: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'r2',
+                name: 'ريزو ستربس',
+                category: 'rizo',
+                price: 6500,
+                isBurger: false,
+                badge: '',
+                desc: 'أرز الريزو المبهر مع قطع ستربس الدجاج المقرمشة والصوص.',
+                image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80'
+            },
+
+            // الفرايز
+            {
+                id: 'f1',
+                name: 'شاورما فرايز (كبير)',
+                category: 'fries',
+                price: 5250,
+                isBurger: false,
+                badge: 'كبير',
+                desc: 'بطاطس مقرمشة مغطاة بشرائح الشاورما والجبن.',
+                image: 'https://images.unsplash.com/photo-1576107232684-1279f390859f?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'f2',
+                name: 'شاورما فرايز (صغير)',
+                category: 'fries',
+                price: 4500,
+                isBurger: false,
+                badge: 'صغير',
+                desc: 'طبق بطاطس مقرمشة مغطى بالشاورما.',
+                image: 'https://images.unsplash.com/photo-1576107232684-1279f390859f?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'f3',
+                name: 'تشكن فرايز (كبير)',
+                category: 'fries',
+                price: 5250,
+                isBurger: false,
+                badge: 'كبير',
+                desc: 'بطاطس ذهبية مع قطع الدجاج المقرمشة والصوصات.',
+                image: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'f4',
+                name: 'تشكن فرايز (صغير)',
+                category: 'fries',
+                price: 4500,
+                isBurger: false,
+                badge: 'صغير',
+                desc: 'بطاطس ذهبية مع قطع الدجاج.',
+                image: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'f5',
+                name: 'تشيز فرايز (كبير)',
+                category: 'fries',
+                price: 4250,
+                isBurger: false,
+                badge: 'كبير',
+                desc: 'بطاطس محملة بجبن الشيدر المذاب الساخن.',
+                image: 'https://images.unsplash.com/photo-1518013031314-727e0237fa62?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'f6',
+                name: 'تشيز فرايز (صغير)',
+                category: 'fries',
+                price: 3500,
+                isBurger: false,
+                badge: 'صغير',
+                desc: 'بطاطس مع صوص الجبن الساخن.',
+                image: 'https://images.unsplash.com/photo-1518013031314-727e0237fa62?auto=format&fit=crop&w=600&q=80'
+            },
+
+            // الإضافات والمشروبات
+            {
+                id: 'e1',
+                name: 'صوص رادار إضافي',
+                category: 'extras',
+                price: 750,
+                isBurger: false,
+                badge: '',
+                desc: 'علبة صوص رادار الخاص الغني بالنكهة.',
+                image: 'https://images.unsplash.com/photo-1472476443507-c7a5948772fc?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'e2',
+                name: 'كوكا كولا / بيبسي',
+                category: 'extras',
+                price: 500,
+                isBurger: false,
+                badge: 'بارد',
+                desc: 'علبة مشروب غازي بارد 330 مل.',
+                image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=600&q=80'
+            }
+        ];
+
+        // App State
+        let cart = [];
+        const DELIVERY_FEE = 1500;
+        let selectedItemForOption = null;
+        let isMealSelected = false;
+        let selectedDrink = 'بيبسي';
+        let currentFilter = 'all';
+        let formattedOrderMessage = "";
+
+        // DOM Loaded Init
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMenu();
+        });
+
+        // Format IQD Currency
+        function formatIQD(num) {
+            return num.toLocaleString('en-US') + ' د.ع';
+        }
+
+        // Render Menu Grid
+        function renderMenu() {
+            const grid = document.getElementById('menuGrid');
+            const searchVal = document.getElementById('searchInput').value.trim().toLowerCase();
+            const noRes = document.getElementById('noResults');
+
+            grid.innerHTML = '';
+            let count = 0;
+
+            menuItems.forEach(item => {
+                const matchesCategory = (currentFilter === 'all') || (item.category === currentFilter);
+                const matchesSearch = item.name.toLowerCase().includes(searchVal) || item.desc.toLowerCase().includes(searchVal);
+
+                if (matchesCategory && matchesSearch) {
+                    count++;
+                    const card = document.createElement('div');
+                    card.className = "bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-xl hover:border-radarYellow/50 transition-all flex flex-col justify-between group";
+
+                    card.innerHTML = `
+                        <div>
+                            <div class="relative h-44 overflow-hidden bg-zinc-800">
+                                <img src="${item.image}" alt="${item.name}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x400/1e1e1e/FFC800?text=RADAR'">
+                                ${item.badge ? `<span class="absolute top-3 right-3 bg-radarRed text-white text-[11px] font-black px-2.5 py-1 rounded-full shadow-lg">${item.badge}</span>` : ''}
+                                ${item.isBurger ? `<span class="absolute bottom-3 left-3 bg-radarYellow/90 text-radarDark text-[10px] font-extrabold px-2 py-0.5 rounded shadow">قابل للتحويل لوجبة</span>` : ''}
+                            </div>
+                            <div class="p-4 space-y-1">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-black text-white group-hover:text-radarYellow transition-colors">${item.name}</h3>
+                                </div>
+                                <p class="text-xs text-zinc-400 line-clamp-2">${item.desc}</p>
+                            </div>
+                        </div>
+
+                        <div class="p-4 pt-0 flex items-center justify-between border-t border-zinc-800/60 mt-3">
+                            <span class="text-radarYellow font-black text-lg">${formatIQD(item.price)}</span>
+                            <button onclick="handleAddToCart('${item.id}')" class="bg-radarYellow hover:bg-radarYellowDark text-radarDark font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition-transform active:scale-95 shadow">
+                                <i class="fa-solid fa-plus"></i> إضافة للسلة
+                            </button>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                }
+            });
+
+            if (count === 0) {
+                noRes.classList.remove('hidden');
+            } else {
+                noRes.classList.add('hidden');
+            }
+        }
+
+        // Category Filter
+        function filterCategory(cat) {
+            currentFilter = cat;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-radarYellow', 'text-radarDark');
+                btn.classList.add('bg-zinc-800', 'text-zinc-300');
+            });
+            event.currentTarget.classList.add('active', 'bg-radarYellow', 'text-radarDark');
+            event.currentTarget.classList.remove('bg-zinc-800', 'text-zinc-300');
+            renderMenu();
+        }
+
+        // Search Handlers
+        function handleSearch() {
+            renderMenu();
+        }
+
+        function resetSearch() {
+            document.getElementById('searchInput').value = '';
+            filterCategory('all');
+        }
+
+        // Handle Add To Cart Dispatcher
+        function handleAddToCart(itemId) {
+            const item = menuItems.find(i => i.id === itemId);
+            if (!item) return;
+
+            if (item.isBurger) {
+                // Show modal to ask if sandwich or full meal (+1,500 IQD)
+                selectedItemForOption = item;
+                document.getElementById('optModalTitle').innerText = item.name;
+                document.getElementById('optBasePrice').innerText = formatIQD(item.price);
+                document.getElementById('optMealPrice').innerText = formatIQD(item.price + 1500);
+                
+                // Default selection to Sandwich only
+                selectMealOption(false);
+                document.getElementById('optionModal').classList.remove('hidden');
+            } else {
+                // Direct add
+                addItemToCart({
+                    id: item.id + '_single',
+                    baseId: item.id,
+                    name: item.name,
+                    price: item.price,
+                    isMeal: false,
+                    drink: ''
+                });
+            }
+        }
+
+        // Option Modal Toggle
+        function selectMealOption(isMeal) {
+            isMealSelected = isMeal;
+            const sandBtn = document.getElementById('optSandwichOnly');
+            const mealBtn = document.getElementById('optFullMeal');
+            const drinkContainer = document.getElementById('drinkChoiceContainer');
+
+            if (isMeal) {
+                mealBtn.classList.add('border-radarYellow', 'bg-zinc-800');
+                mealBtn.classList.remove('border-zinc-700', 'bg-zinc-800/30');
+                sandBtn.classList.remove('border-radarYellow', 'bg-zinc-800');
+                sandBtn.classList.add('border-zinc-700', 'bg-zinc-800/30');
+                drinkContainer.classList.remove('hidden');
+            } else {
+                sandBtn.classList.add('border-radarYellow', 'bg-zinc-800');
+                sandBtn.classList.remove('border-zinc-700', 'bg-zinc-800/30');
+                mealBtn.classList.remove('border-radarYellow', 'bg-zinc-800');
+                mealBtn.classList.add('border-zinc-700', 'bg-zinc-800/30');
+                drinkContainer.classList.add('hidden');
+            }
+        }
+
+        function setDrinkChoice(drink) {
+            selectedDrink = drink;
+            document.querySelectorAll('.drink-btn').forEach(btn => {
+                if (btn.innerText.includes(drink)) {
+                    btn.classList.add('border-radarYellow', 'bg-radarYellow/10', 'text-radarYellow');
+                    btn.classList.remove('border-zinc-700', 'text-zinc-400');
+                } else {
+                    btn.classList.remove('border-radarYellow', 'bg-radarYellow/10', 'text-radarYellow');
+                    btn.classList.add('border-zinc-700', 'text-zinc-400');
+                }
+            });
+        }
+
+        function closeOptionModal() {
+            document.getElementById('optionModal').classList.add('hidden');
+            selectedItemForOption = null;
+        }
+
+        function confirmAddToCartWithOptions() {
+            if (!selectedItemForOption) return;
+
+            const finalPrice = isMealSelected ? (selectedItemForOption.price + 1500) : selectedItemForOption.price;
+            const finalName = isMealSelected ? `${selectedItemForOption.name} (وجبة كاملة - ${selectedDrink})` : `${selectedItemForOption.name} (سندويش)`;
+            const uniqueKey = selectedItemForOption.id + (isMealSelected ? `_meal_${selectedDrink}` : '_single');
+
+            addItemToCart({
+                id: uniqueKey,
+                baseId: selectedItemForOption.id,
+                name: finalName,
+                price: finalPrice,
+                isMeal: isMealSelected,
+                drink: isMealSelected ? selectedDrink : ''
+            });
+
+            closeOptionModal();
+        }
+
+        // Cart State Management
+        function addItemToCart(itemObj) {
+            const existing = cart.find(c => c.id === itemObj.id);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({
+                    ...itemObj,
+                    qty: 1
+                });
+            }
+            updateCartUI();
+            showToast(`تمت إضافة "${itemObj.name}" إلى السلة`);
+        }
+
+        function updateCartQty(id, delta) {
+            const index = cart.findIndex(c => c.id === id);
+            if (index !== -1) {
+                cart[index].qty += delta;
+                if (cart[index].qty <= 0) {
+                    cart.splice(index, 1);
+                }
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const countBadge = document.getElementById('cartCountBadge');
+            const itemsList = document.getElementById('cartItemsList');
+            const subtotalEl = document.getElementById('cartSubtotal');
+            const totalEl = document.getElementById('cartTotal');
+            const checkoutBtn = document.getElementById('checkoutProceedBtn');
+
+            const totalItems = cart.reduce((acc, i) => acc + i.qty, 0);
+            const subtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+            const total = subtotal > 0 ? (subtotal + DELIVERY_FEE) : 0;
+
+            countBadge.innerText = totalItems;
+
+            // Render Items
+            if (cart.length === 0) {
+                itemsList.innerHTML = `
+                    <div class="text-center py-12 text-zinc-500 space-y-2">
+                        <i class="fa-solid fa-basket-shopping text-4xl text-zinc-600"></i>
+                        <p class="text-sm">سلتك فارغة حالياً</p>
+                    </div>
+                `;
+                checkoutBtn.disabled = true;
+            } else {
+                checkoutBtn.disabled = false;
+                itemsList.innerHTML = cart.map(item => `
+                    <div class="bg-zinc-800/80 p-3 rounded-xl border border-zinc-700/60 flex items-center justify-between gap-2">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-white text-xs leading-snug">${item.name}</h4>
+                            <div class="text-radarYellow text-xs font-black mt-1">${formatIQD(item.price)}</div>
+                        </div>
+                        <div class="flex items-center gap-2 bg-zinc-900 border border-zinc-700 px-2 py-1 rounded-lg">
+                            <button onclick="updateCartQty('${item.id}', -1)" class="text-zinc-400 hover:text-white text-xs px-1">-</button>
+                            <span class="text-white text-xs font-bold min-w-[16px] text-center">${item.qty}</span>
+                            <button onclick="updateCartQty('${item.id}', 1)" class="text-radarYellow hover:text-white text-xs px-1">+</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            subtotalEl.innerText = formatIQD(subtotal);
+            totalEl.innerText = formatIQD(total);
+        }
+
+        // Cart Drawer Control
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cartDrawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        // Checkout Modal Control
+        function openCheckoutModal() {
+            if (cart.length === 0) return;
+            toggleCartDrawer();
+            document.getElementById('checkoutModal').classList.remove('hidden');
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').classList.add('hidden');
+        }
+
+        // Handle Order Form Submit
+        function handleOrderSubmission(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const zone = document.getElementById('custZone').value;
+            const address = document.getElementById('custAddress').value.trim();
+            const notes = document.getElementById('custNotes').value.trim();
+
+            if (!zone) {
+                alert('يرجى اختيار إحدى المناطق المتاحة للتوصيل في بغداد');
+                return;
+            }
+
+            const subtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+            const total = subtotal + DELIVERY_FEE;
+
+            // Generate structured WhatsApp/SMS Message Body
+            let msg = `🍔 *طلب جديد من مطعم رادار (RADAR)*\n`;
+            msg += `------------------------------\n`;
+            msg += `👤 *الاسم:* ${name}\n`;
+            msg += `📞 *رقم الهاتف:* ${phone}\n`;
+            msg += `📍 *المنطقة (بغداد):* ${zone}\n`;
+            msg += `🏠 *العنوان والتفاصيل:* ${address}\n`;
+            if (notes) {
+                msg += `📝 *ملاحظات:* ${notes}\n`;
+            }
+            msg += `------------------------------\n`;
+            msg += `🛒 *تفاصيل الطلب:*\n`;
+
+            cart.forEach((item, idx) => {
+                msg += `${idx + 1}. ${item.name} × ${item.qty} = ${formatIQD(item.price * item.qty)}\n`;
+            });
+
+            msg += `------------------------------\n`;
+            msg += `💵 *المجموع:* ${formatIQD(subtotal)}\n`;
+            msg += `🛵 *أجور التوصيل:* 1.000 د.ع\n`;
+            msg += `💰 *المبلغ الكلي المطلوب:* ${formatIQD(total)}\n`;
+            msg += `------------------------------\n`;
+            msg += `⏰ *وقت الطلب:* ${new Date().toLocaleTimeString('ar-IQ')}`;
+
+            formattedOrderMessage = msg;
+
+            // Show preview message modal
+            document.getElementById('messagePreviewText').innerText = msg;
+            closeCheckoutModal();
+            document.getElementById('dispatchModal').classList.remove('hidden');
+        }
+
+        // Dispatch Action 1: WhatsApp
+        function sendViaWhatsApp() {
+            const encoded = encodeURIComponent(formattedOrderMessage);
+            const url = `https://wa.me/${WA_PHONE}?text=${encoded}`;
+            window.open(url, '_blank');
+        }
+
+        // Dispatch Action 2: SMS
+        function sendViaSMS() {
+            const encoded = encodeURIComponent(formattedOrderMessage);
+            const url = `sms:${TARGET_PHONE}?body=${encoded}`;
+            window.open(url, '_self');
+        }
+
+        // Copy order message
+        function copyOrderMessage() {
+            navigator.clipboard.writeText(formattedOrderMessage).then(() => {
+                showToast('تم نسخ نص الطلب بنجاح!');
+            }).catch(() => {
+                const textArea = document.createElement("textarea");
+                textArea.value = formattedOrderMessage;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('تم نسخ نص الطلب بنجاح!');
+            });
+        }
+
+        function resetAndCloseAll() {
+            document.getElementById('dispatchModal').classList.add('hidden');
+            cart = [];
+            updateCartUI();
+            document.getElementById('orderForm').reset();
+        }
+
+        // Toast Helper
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2800);
+        }
+    </script>
+</body>
+</html>
